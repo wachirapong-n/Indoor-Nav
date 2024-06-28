@@ -1,0 +1,11 @@
+# ninja log v5
+62	385	7412037619129825	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	9641ca30ad774e46
+386	643	7412037620961612	D:/Unity/iNavPredictFromPNG/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5f183p5x/obj/arm64-v8a/libswappywrapper.so	4b865837ddb58de1
+25	1234	7412037627521391	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	50a2756c939aa823
+17	1276	7412037628003242	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	dd18ad13c72356da
+43	1298	7412037628050708	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	5e532f8033ec198b
+52	1425	7412037629203398	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	5cdaa4495c1de500
+1	1508	7412037629640281	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	3f951421dcc1d1f6
+33	1692	7412037631694347	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	27db250be9574cbf
+9	1764	7412037632806581	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	26f8609e373d797
+1764	1968	7412037634386388	D:/Unity/iNavPredictFromPNG/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5f183p5x/obj/arm64-v8a/libgame.so	de39df07bb4483c4
