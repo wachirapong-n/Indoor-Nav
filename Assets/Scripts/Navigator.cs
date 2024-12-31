@@ -20,11 +20,12 @@ public class Navigator : MonoBehaviour
     [SerializeField] private TMP_Text errorText;
     [SerializeField] private TMP_Text TruePosition;
     [SerializeField] private Transform XROringin;
-    
+    [SerializeField] private GetValueFromDropdown dropdown;
     private string targetImage = "seq/"+ MainManager.testImg +".jpg";
+
     private string version = MainManager.version;
     private LineRenderer line;
-    private GameObject spawnedCoin;
+    private Vector3 targetRoom;
     private GameObject spawnedPlayer;
     private bool pathActive = false;
     private bool DEBUG = MainManager.DEBUG;
@@ -63,9 +64,9 @@ public class Navigator : MonoBehaviour
             // Debug.Log($"Player on NavMesh: {playerOnNavMesh}");
             // Debug.Log($"Coin on NavMesh: {coinOnNavMesh}");
 
-            if (spawnedPlayer != null && spawnedCoin != null)
+            if (spawnedPlayer != null && targetRoom != null)
             {
-                if (NavMesh.CalculatePath(spawnedPlayer.transform.position, spawnedCoin.transform.position,
+                if (NavMesh.CalculatePath(spawnedPlayer.transform.position, targetRoom,
                         NavMesh.AllAreas, path))
                 {
                     line.positionCount = path.corners.Length;
@@ -76,7 +77,7 @@ public class Navigator : MonoBehaviour
                 }
                 else if (!errorLogged)
                 {
-                    errorText.text = $"Cant to calculate path\n{spawnedPlayer.transform.position}\n{spawnedCoin.transform.position}"; 
+                    errorText.text = $"Cant to calculate path\n{spawnedPlayer.transform.position}\n{targetRoom}"; 
                     errorLogged = true;
                 
                 }
@@ -125,10 +126,7 @@ public class Navigator : MonoBehaviour
 
         // Vector3 truePos = new Vector3(-truePosArr[0], truePosArr[1], -truePosArr[2]);
         // CSBPointCloud.transform.position = truePos;
-
-        spawnedCoin = coin;
-        
-        // XROringin.position = new Vector3(output[0], output[1], output[2]);
+        targetRoom = dropdown.GetValueDropdown();
         spawnedPlayer = playerObject;
         SpawnPlate(output);
         firstFloor.SetActive(true);
