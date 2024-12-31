@@ -91,16 +91,9 @@ public class Navigator : MonoBehaviour
 
     public void Spawn(float[] output)
     {
-        // playerObject.transform.position = spawnPlayer;
-
-        float x, z, cX, cZ;
-        cX = coin.transform.localPosition.x;
-        cZ = coin.transform.localPosition.z;
-        x = firstFloor.transform.position.x;
-        z = firstFloor.transform.position.z;
-        Debug.Log($"coin!: {cX}, {cZ}");
-
-        // float[] truePosArr = GetTruePosition();
+        firstFloor.transform.position = new Vector3(0, 0, 0);
+        firstFloor.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+        
         Quaternion predictedQuat = new Quaternion(output[4], output[5], output[6], output[3]);
         // Quaternion predictedQuat = new Quaternion(truePosArr[4], truePosArr[5], truePosArr[6], truePosArr[3]);
         Quaternion currAngle = firstFloor.transform.rotation;
@@ -121,9 +114,7 @@ public class Navigator : MonoBehaviour
         pos = Quaternion.Euler(0,rotation.y, 0 ) * pos;
         firstFloor.transform.rotation = Quaternion.Euler(rotation);
         firstFloor.transform.position = pos;
-
         
-
         // Vector3 truePos = new Vector3(-truePosArr[0], truePosArr[1], -truePosArr[2]);
         // CSBPointCloud.transform.position = truePos;
         targetRoom = dropdown.GetValueDropdown();
@@ -136,23 +127,22 @@ public class Navigator : MonoBehaviour
         firstFloor.isStatic = true;
 
     }
-
     void SpawnPlate(float[] output)
     {
-        if (DEBUG)
-        {
-            float[] truePosArr = GetTruePosition();
-            string[] txt = { "x: ", "y: ", "z: ", "qw: ", "qx: ", "qy: ", "qz: " };
-        
-            string outputTxt = "True Position:\n";
-            for (int i = 0; i < truePosArr.Length ; i++)
-            {
-                outputTxt += txt[i] + truePosArr[i] + "\n";
-            }
-            TruePosition.text = outputTxt;
-            Vector3 truePos = new Vector3(-truePosArr[0], truePosArr[1], -truePosArr[2]);
-            Instantiate(truePosition, truePos, Quaternion.identity);
-        }
+        // if (DEBUG)
+        // {
+        //     float[] truePosArr = GetTruePosition();
+        //     string[] txt = { "x: ", "y: ", "z: ", "qw: ", "qx: ", "qy: ", "qz: " };
+        //
+        //     string outputTxt = "True Position:\n";
+        //     for (int i = 0; i < truePosArr.Length ; i++)
+        //     {
+        //         outputTxt += txt[i] + truePosArr[i] + "\n";
+        //     }
+        //     TruePosition.text = outputTxt;
+        //     Vector3 truePos = new Vector3(-truePosArr[0], truePosArr[1], -truePosArr[2]);
+        //     Instantiate(truePosition, truePos, Quaternion.identity);
+        // }
         
         Vector3 predPos = new Vector3(-output[0], output[1], -output[2]);
         Instantiate(predPosition, predPos, Quaternion.identity);
