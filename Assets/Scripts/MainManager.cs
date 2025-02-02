@@ -22,7 +22,7 @@ public class MainManager : MonoBehaviour
     private string _output;
     public static bool DEBUG = false;
     public Navigator navigate;
-    public static string testImg = "IMG_7299_9";
+    public static string testImg = "IMG_7228_5";
     public static string version = "V2";
 
 
