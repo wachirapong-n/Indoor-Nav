@@ -30,27 +30,11 @@ public class Navigator : MonoBehaviour
     private int count = 0;
     void Start()
     {
-        // firstFloor.SetActive(false);
+        firstFloor.SetActive(false);
         playerObject.GetComponent<Renderer>().enabled = false;
-        SetInvisible(firstFloor.transform);
         line = transform.GetComponent<LineRenderer>();
         line.enabled = false;
 
-    }
-    void SetInvisible(Transform objTransform)
-    {
-        // Disable the renderer on the current object
-        Renderer renderer = objTransform.GetComponent<Renderer>();
-        if (renderer != null)
-        {
-            renderer.enabled = false;
-        }
-
-        // Recursively disable the renderer on all child objects
-        foreach (Transform child in objTransform)
-        {
-            SetInvisible(child);
-        }
     }
     private IEnumerator UpdatePath()
     {
@@ -114,7 +98,7 @@ public class Navigator : MonoBehaviour
         targetRoom = dropdown.GetValueDropdown();
         spawnedPlayer = playerObject;
         // SpawnPlate(output);
-        // firstFloor.SetActive(true);
+        firstFloor.SetActive(true);
 
         pathActive = true;
         StartCoroutine(UpdatePath());
