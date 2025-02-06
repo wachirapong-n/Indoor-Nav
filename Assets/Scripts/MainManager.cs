@@ -8,18 +8,14 @@ using UnityEngine.UI;
 using UnityEngine.AI;
 public class MainManager : MonoBehaviour
 {
-    // [SerializeField] private TMP_Text inputValue;
     [SerializeField] private TMP_Text outputValue;
     [SerializeField] private NNModel myModel;
     [SerializeField] private GameObject playerObject;
     [SerializeField] private Camera ARcamera;
-    [SerializeField] private GameObject firstFloor;
-    [SerializeField] private GameObject coin;
     [SerializeField] private Image displayImage;
     
     private Model _runtimeModel;
     private IWorker _worker;
-    private string _output;
     public static bool DEBUG = false;
     public Navigator navigate;
     public static string testImg = "IMG_7228_5";
@@ -29,9 +25,12 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         _runtimeModel = ModelLoader.Load(myModel, true);
+        if (DEBUG)
+        {
+            _runtimeModel = ModelLoader.Load(myModel);
+        }
         _worker = WorkerFactory.CreateWorker(WorkerFactory.Type.Auto, _runtimeModel, true);
         var count = _runtimeModel.outputs.Count;
-        _output = _runtimeModel.outputs[count - 1];
 
     }
 

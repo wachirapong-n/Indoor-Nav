@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
@@ -13,7 +14,7 @@ public class Navigator : MonoBehaviour
 {
 
     [SerializeField] private GameObject playerObject;
-    [SerializeField] private GameObject firstFloor;
+    [SerializeField] private GameObject csb;
     [SerializeField] private GameObject predPosition;
     [SerializeField] private TMP_Text errorText;
     [SerializeField] private Transform XROringin;
@@ -25,12 +26,12 @@ public class Navigator : MonoBehaviour
     private Vector3 targetRoom;
     private GameObject spawnedPlayer;
     private bool pathActive = false;
-    private bool DEBUG = MainManager.DEBUG;
+
     private Vector3 degree;
     private int count = 0;
     void Start()
     {
-        firstFloor.SetActive(false);
+        csb.SetActive(false);
         playerObject.GetComponent<Renderer>().enabled = false;
         line = transform.GetComponent<LineRenderer>();
         line.enabled = false;
@@ -52,7 +53,7 @@ public class Navigator : MonoBehaviour
 
                     for (int i = 0; i < path.corners.Length; i++)
                     {
-                        adjustedCorners[i] = path.corners[i] + new Vector3(0, 0.2f, 0);
+                        adjustedCorners[i] = path.corners[i] + new Vector3(0, 0.3f, 0);
                     }
 
                     line.positionCount = adjustedCorners.Length;
@@ -74,31 +75,33 @@ public class Navigator : MonoBehaviour
         errorText.text = "";
     }
 
-
+    
     public void Spawn(float[] output)
     {
         if (count != 0)
         {
-            firstFloor.transform.position = new Vector3(0, -12.7f, 0);
-            firstFloor.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            csb.transform.position = new Vector3(0, 0, 0);
+            csb.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
         }
+        
+        float y = csb.transform.position.y;
 
         Quaternion predictedQuat = new Quaternion(output[4], output[5], output[6], output[3]);
-        Quaternion currAngle = firstFloor.transform.rotation;
+        Quaternion currAngle = csb.transform.rotation;
         Vector3 currEulerAngle = currAngle.eulerAngles;
         Vector3 predictedEuler = predictedQuat.eulerAngles;
         Vector3 rotation = new Vector3(0, predictedEuler.y + currEulerAngle.y, 0);
         
-        Vector3 pos = new Vector3(-output[0], 1, -output[2]);
+        Vector3 pos = new Vector3(-output[0], 0, -output[2]);
         pos = Quaternion.Euler(0,rotation.y, 0 ) * pos;
-        firstFloor.transform.rotation = Quaternion.Euler(rotation);
-        firstFloor.transform.position += pos;
-        firstFloor.transform.position += new Vector3(0, -1.0f, 0);
+        csb.transform.rotation = Quaternion.Euler(rotation);
+        csb.transform.position = pos;
+        csb.transform.position += new Vector3(0, y - 7.5f, 0);
         
         targetRoom = dropdown.GetValueDropdown();
         spawnedPlayer = playerObject;
         // SpawnPlate(output);
-        firstFloor.SetActive(true);
+        csb.SetActive(true);
 
         pathActive = true;
         StartCoroutine(UpdatePath());
