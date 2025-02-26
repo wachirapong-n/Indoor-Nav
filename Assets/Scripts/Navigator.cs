@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
 using Unity.VisualScripting.FullSerializer;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using UnityEngine.XR.OpenXR.NativeTypes;
 
@@ -17,17 +18,18 @@ public class Navigator : MonoBehaviour
     [SerializeField] private GameObject csb;
     [SerializeField] private GameObject predPosition;
     [SerializeField] private TMP_Text errorText;
+    [SerializeField] private TMP_Text distanceText;
+    [SerializeField] private GameObject popupNotification;
     [SerializeField] private Transform XROringin;
+    [SerializeField] private Transform mainCamera;
     [SerializeField] private GetValueFromDropdown dropdown;
+    [SerializeField] private DestinationBehaviour destination;
     private string targetImage = "seq/"+ MainManager.testImg +".jpg";
-
     private string version = MainManager.version;
     private LineRenderer line;
     private Vector3 targetRoom;
     private GameObject spawnedPlayer;
     private bool pathActive = false;
-
-    private Vector3 degree;
     private int count = 0;
     void Start()
     {
@@ -49,18 +51,23 @@ public class Navigator : MonoBehaviour
             {
                 if (NavMesh.CalculatePath(spawnedPlayer.transform.position, targetRoom, NavMesh.AllAreas, path))
                 {
-                    Vector3[] adjustedCorners = new Vector3[path.corners.Length];
-
-                    for (int i = 0; i < path.corners.Length; i++)
-                    {
-                        adjustedCorners[i] = path.corners[i] + new Vector3(0, 0.3f, 0);
-                    }
-
-                    line.positionCount = adjustedCorners.Length;
-                    line.SetPositions(adjustedCorners);
+                    
+                    float distance = Vector3.Distance(spawnedPlayer.transform.position, targetRoom);
+                    line.positionCount = path.corners.Length;
+                    line.SetPositions(path.corners);
                     line.enabled = true;
                     errorText.text = ""; 
                     errorLogged = false; 
+                    distanceText.text = $"Distance: {distance:F2} m";
+                    
+                    if (distance < 6f)
+                    {
+                        ShowPopup("You're almost there! \nJust a few more steps to go.");
+                    }
+                    else
+                    {
+                        HidePopup();
+                    }
                 }
                 else if (!errorLogged)
                 {
@@ -73,6 +80,7 @@ public class Navigator : MonoBehaviour
     
         line.enabled = false;
         errorText.text = "";
+        distanceText.text = "";
     }
 
     
@@ -88,31 +96,38 @@ public class Navigator : MonoBehaviour
 
         Quaternion predictedQuat = new Quaternion(output[4], output[5], output[6], output[3]);
         Quaternion currAngle = csb.transform.rotation;
+        Quaternion playerAngle = mainCamera.rotation;
+        Vector3 playerEulerAngle = playerAngle.eulerAngles;
         Vector3 currEulerAngle = currAngle.eulerAngles;
         Vector3 predictedEuler = predictedQuat.eulerAngles;
-        Vector3 rotation = new Vector3(0, predictedEuler.y + currEulerAngle.y, 0);
+        Vector3 rotation = new Vector3(0, predictedEuler.y + currEulerAngle.y + playerEulerAngle.y, 0);
         
         Vector3 pos = new Vector3(-output[0], 0, -output[2]);
         pos = Quaternion.Euler(0,rotation.y, 0 ) * pos;
         csb.transform.rotation = Quaternion.Euler(rotation);
         csb.transform.position = pos;
-        csb.transform.position += new Vector3(0, y - 7.5f, 0);
+        csb.transform.position += new Vector3(0, y - 7.7f, 0);
+        csb.transform.position += new Vector3(mainCamera.transform.position.x,
+            mainCamera.transform.position.y - 0.25f,
+            mainCamera.transform.position.z);
+        
+        csb.transform.rotation = Quaternion.Euler(rotation);
         
         targetRoom = dropdown.GetValueDropdown();
         spawnedPlayer = playerObject;
-        // SpawnPlate(output);
-        csb.SetActive(true);
-
-        pathActive = true;
-        StartCoroutine(UpdatePath());
-        count++;
-
-    }
-    void SpawnPlate(float[] output)
-    {
         
-        Vector3 predPos = new Vector3(-output[0], output[1], -output[2]);
-        Instantiate(predPosition, predPos, Quaternion.identity);
+        csb.SetActive(true);
+        DeactivateAllRooms();
+        
+        GameObject destRoom = dropdown.GetRoomObjectDropdown();
+        destination.SetDestination(destRoom);
+        destination.Activate(true);
+        
+        pathActive = true;
+        
+        StartCoroutine(UpdatePath());
+        
+        count++;
 
     }
     
@@ -166,6 +181,48 @@ public class Navigator : MonoBehaviour
         return truePosArr;
     }
     
+    private void ShowPopup(string message)
+    {
+        if (popupNotification != null)
+        {
+            popupNotification.SetActive(true);
+            popupNotification.GetComponentInChildren<TMP_Text>().text = message; 
+
+        }
+    }
+
+    private void HidePopup()
+    {
+        if (popupNotification != null)
+        {
+            popupNotification.SetActive(false);
+        }
+    }
+    
+    public void DeactivateAllRooms()
+    {
+        if (csb == null)
+        {
+            Debug.LogError("Building is not assigned!");
+            return;
+        }
+        Transform allFloors = csb.transform.Find("AllFloors");
+        foreach (Transform floor in allFloors.transform)
+        {
+            Transform rooms = floor.Find("Rooms"); 
+            if (rooms != null)
+            {
+                foreach (Transform room in rooms) 
+                {
+                    room.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Rooms not found under {floor.name}");
+            }
+        }
+    }
 
 }
 

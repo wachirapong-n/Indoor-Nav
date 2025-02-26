@@ -100,41 +100,6 @@ public class MainManager : MonoBehaviour
         }
     }
     
-
-    public void SaveFloatArrayAsImage(float[,,,] floatArray, string filePath)
-    {
-    
-        Texture2D texture = new Texture2D(224, 224);
-        Color[] pixels = new Color[224 * 224];
-        for (int i = 0 ; i < 224 ; i++) {
-            for (int j = 0 ; j < 224 ; j++)
-            {
-
-                float r = floatArray[0,i,j,0];     
-                float g = floatArray[0,i,j,1]; 
-                float b = floatArray[0,i,j,2]; 
-                pixels[i] = new Color(r, g, b);
-                if ( (i == 0 && j == 0) || 
-                    (i == 0 && j == 223) || 
-                    (i == 223 && j == 0) || 
-                    (i == 223 && j == 223)) 
-                {
-                    Debug.LogError($"i: {i} j: {j} color: {pixels[i]}");
-                 
-                }
-                
-
-            }
-        }   
-        texture.SetPixels(pixels);
-        texture.Apply(); 
-        
-        byte[] jpgBytes = texture.EncodeToJPG();
-        
-        File.WriteAllBytes(filePath, jpgBytes);
-    
-        Debug.Log($"Image saved to {filePath}");
-    }
     private Texture2D GetImage()
     {
         int swidth = Screen.width;
@@ -217,31 +182,7 @@ public class MainManager : MonoBehaviour
         return croppedTexture;
     }
     
-    private float[] ConvertByteArrayToFloat32Array(byte[] byteArray)
-    {
-        // Calculate how many floats we can fit in the byte array
-        Texture2D texture = new Texture2D(2, 2);
-        texture.LoadImage(byteArray);
 
-        // Get the width and height of the image
-        int width = texture.width;
-        int height = texture.height;
-
-        // Extract the pixel colors
-        Color[] pixels = texture.GetPixels();
-
-        // Convert Color[] to float[] (RGB)
-        float[] floatArray = new float[pixels.Length * 3]; // 3 floats per pixel (R, G, B)
-
-        for (int i = 0; i < pixels.Length; i++)
-        {
-            floatArray[i * 3] = pixels[i].r;  // Red
-            floatArray[i * 3 + 1] = pixels[i].g;  // Green
-            floatArray[i * 3 + 2] = pixels[i].b;  // Blue
-        }
-
-        return floatArray;
-    }
 
 
 

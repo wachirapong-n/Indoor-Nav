@@ -19,5 +19,13 @@ public class GetValueFromDropdown : MonoBehaviour
         targetPosition = selectedRoom.PositionObject.transform.position;
         return targetPosition;
     }
-    
+
+    public GameObject GetRoomObjectDropdown()
+    {
+        int indx = dropdown.value;
+        string selectedValue = dropdown.options[indx].text;
+        Target selectedRoom = targetRoom.Find(x => x.Name.Equals(selectedValue));
+        return selectedRoom.PositionObject;
+    }
+
 }
