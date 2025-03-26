@@ -20,7 +20,7 @@ public class MainManager : MonoBehaviour
     public static bool DEBUG = false; // สำหรับ Debug
     public Navigator navigate; // ตัวจัดการเส้นทาง
     public static string testImg = "IMG_9767_7"; // ไฟล์ภาพสำหรับทดสอบ
-    public static string version = "V3"; // version ของภาพ
+    public static string version = "V3"; // version ของ model และภาพ ที่จะใช้
 
     void Start()
     {
