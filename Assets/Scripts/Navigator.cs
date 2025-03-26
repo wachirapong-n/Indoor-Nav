@@ -21,7 +21,6 @@ public class Navigator : MonoBehaviour
     [SerializeField] private Transform mainCamera;
     [SerializeField] private GetValueFromDropdown dropdown; 
     [SerializeField] private DestinationBehaviour destination; 
-    [SerializeField] private GameObject csbPointCloud;
 
     private LineRenderer line; // ตัวแสดงเส้นทาง
     private Vector3 targetRoom; // ห้องที่ต้องการไป
@@ -31,7 +30,6 @@ public class Navigator : MonoBehaviour
     {
         pathActive = false;
         csb.SetActive(false); // set ให้ model CSB ล่องหน
-        csbPointCloud.SetActive(false);
         line = transform.GetComponent<LineRenderer>();
         line.enabled = false;
     }
@@ -111,7 +109,7 @@ public class Navigator : MonoBehaviour
         Quaternion playerAngle = mainCamera.rotation;
         Vector3 playerEulerAngle = playerAngle.eulerAngles;
         
-        
+        // นำ euler angle ของแต่ละอันมารวมกัน
         Vector3 rotation = new Vector3(0, predictedEuler.y + currEulerAngle.y + playerEulerAngle.y, 0);
         
         // แปลง output ของ prediction ให้เป็น position
@@ -128,7 +126,7 @@ public class Navigator : MonoBehaviour
             -2f);
         
         
-        // position ใหม่หลังจากรวมค่า rotation
+        // position ใหม่หลังจากมีค่า rotation มาเกี่ยวข้อง
         // pos = Quaternion.Euler(0,rotation.y, 0 ) * pos;
         
         // set position, rotation ของ model CSB
@@ -140,8 +138,7 @@ public class Navigator : MonoBehaviour
 
         // set model CSB ให้ทำงาน
         csb.SetActive(true);
-        // csbPointCloud.SetActive(true);
-
+        
         // set GameObject ของห้องทุกห้องให้ล่องหน
         DeactivateAllRooms();
         
