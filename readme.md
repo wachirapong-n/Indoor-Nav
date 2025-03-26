@@ -43,10 +43,14 @@
   - นำ Tensor เป็น input ของ model เพื่อทำ prediction  
   - ส่ง output ไปยัง `Navigator` เพื่อทำการ spawn CSB model  
 
-- **Navigation**  
+- **Navigation** 
+  - เก็บไฟล์ Navigator
   - ใช้ output จาก prediction เพื่อเรียกฟังก์ชัน `Spawn`  
-  - นำ index 0, 2 ไปเป็น position `(x, z)`  
-  - นำ index 3-6 ไปแปลงเป็น `Euler Angle` และคำนวณ `rotation`  
+  - นำ index 0, 2 ไปเป็น `position` `(x, z)`  
+  - นำ index 3-6 ไปแปลงเป็น `Euler Angle`
+  - จากนั้น นำ Euler Angle ของผู้ใช้, CSB model, index 3-6 มารวมกันและคำนวณ `rotation`  
+  - ในส่วนของ `position`  คือ นำ `rotation`  ที่ได้จากขั้นตอนก่อนหน้าไปคูณกับ `position` ที่ได้จาก prediction ก็จะได้ `position` ใหม่ที่เกิดการหมุนของตึก
+  - set ให้จุดหมายที่ผู้ใช้เลือกสามารถขยับได้ โดยจะขยับโดยการหมุนตามแกน Yและขยับขึ้นลง
   - คำนวณเส้นทางของผู้ใช้กับจุดหมายเพื่อสร้าง path  
 
 - **DestinationBehavior**  
@@ -56,7 +60,7 @@
   - แสดงตำแหน่งและการหมุนของกล้องปัจจุบัน  
 
 - **GetValueDropdown**  
-  - คืนค่า position ของจุดหมายจาก dropdown selection  
+  - คืนค่า `position` ของจุดหมาย เพื่อที่จะสามารถรู้ได้ว่าจุดหมายที่เลือกใน dropdown มี position อะไร
 
 ---
 
@@ -66,7 +70,7 @@
 3. ไปที่ `Scenes` (มุมล่างซ้าย) แล้วดับเบิ้ลคลิกที่ `MainScene`  
 4. ตรวจสอบ Hierarchy ของโปรเจกต์ที่มุมบนซ้าย  
 5. เข้าไปที่ `Scripts > MainManager`  
-6. ดูที่ `Inspector` ทางด้านขวา แล้วค้นหา `Main Manager (Script)`  
-7. หาก `My Model` ขึ้นว่า `missing` ให้ลากไฟล์ model `.onnx` ไปวาง  
+6. ดูที่ `Inspector` ทางด้านขวา แล้วหา `Main Manager (Script)`  
+7. `My Model` ขึ้นว่า `missing` ให้ลากไฟล์ model `.onnx` ไปวาง  
 
 ---
