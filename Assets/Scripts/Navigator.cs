@@ -100,7 +100,7 @@ public class Navigator : MonoBehaviour
         // แปลง Quaternion ของ prediction ให้เป็น euler angle
         Quaternion predictedQuat = new Quaternion(output[4], output[5], output[6], output[3]);
         Vector3 predictedEuler = predictedQuat.eulerAngles;
-        
+ 
         // แปลง Quaternion ของ model CSB ให้เป็น euler angle
         Quaternion currAngle = csb.transform.rotation;
         Vector3 currEulerAngle = currAngle.eulerAngles;
@@ -113,25 +113,26 @@ public class Navigator : MonoBehaviour
         Vector3 rotation = new Vector3(0, predictedEuler.y + currEulerAngle.y + playerEulerAngle.y, 0);
         
         // แปลง output ของ prediction ให้เป็น position
-        // Vector3 pos = new Vector3(
-        //     -output[0],
-        //     0,
-        //     -output[2]);
-        
+        Debug.Log($"{output[0]} {output[2]}");
+        Vector3 pos = new Vector3(
+            output[0],
+            output[1],
+            output[2]);
+
         
         // fixed ค่า postion ของ model CSB สำหรับทดสอบระบบนำทางเฉยๆโดยไม่มี prediction มาเกี่ยวข้อง
-        Vector3 pos = new Vector3(
-            -7f,
-            -3.6f - .6f,
-            -2f);
+        // Vector3 pos = new Vector3(
+        //     -7f,
+        //     -1.131562f,
+        //     -2f);
         
         
         // position ใหม่หลังจากมีค่า rotation มาเกี่ยวข้อง
-        // pos = Quaternion.Euler(0,rotation.y, 0 ) * pos;
-        
+        pos = Quaternion.Euler(0,rotation.y, 0 ) * pos;
+
         // set position, rotation ของ model CSB
         csb.transform.position += pos;
-        // csb.transform.rotation = Quaternion.Euler(rotation);
+        csb.transform.rotation = Quaternion.Euler(rotation);
         
         // set ค่า position ของห้องที่เลือกจะไป
         targetRoom = dropdown.GetValueDropdown();
@@ -192,7 +193,8 @@ public class Navigator : MonoBehaviour
     public void Reset()
     {
         csb.transform.position = new Vector3(0, 0, 0);
-        csb.transform.rotation = Quaternion.Euler(new Vector3(0, -85, 0));
+        // csb.transform.rotation = Quaternion.Euler(new Vector3(0, -85, 0));
+        csb.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
         line.enabled = false;
         pathActive = false;
         csb.SetActive(false);
